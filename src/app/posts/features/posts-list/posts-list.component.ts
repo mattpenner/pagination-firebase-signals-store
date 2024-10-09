@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { PaginatorComponent } from '@core/ui/paginator/paginator.component';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
@@ -13,20 +18,17 @@ import { PostsListStore } from '../../data-access/posts-list.store';
   template: `
     <div class="w-full pt-6">
       <div class="flex justify-content-center grid grid-cols-4 gap-4 mb-4">
-        @if (!$isLoading()) {
-          @for (post of $posts().values(); track post.id) {
-            <post-card
-              class="w-full max-w-20rem"
-              [$post]="post" />
-          }
-          <paginator
-            class="w-full"
-            (onNextClicked)="goToNextPage()"
-            (onPrevClicked)="goToPrevPage()"
-            [$paginator]="listStore.paginator()" />
-        } @else {
-          <post-card-skeleton [$quantity]="listStore.listConfig.limit()" />
+        @if (!$isLoading()) { @for (post of $posts().values(); track post.id) {
+        <post-card class="w-full max-w-20rem" [$post]="post" />
+        } } @else {
+        <post-card-skeleton [$quantity]="listStore.listConfig.limit()" />
         }
+        <paginator
+          class="w-full"
+          (onNextClicked)="goToNextPage()"
+          (onPrevClicked)="goToPrevPage()"
+          [$paginator]="listStore.paginator()"
+        />
       </div>
     </div>
   `,
@@ -52,12 +54,20 @@ export class PostsListComponent {
   }
 
   goToNextPage() {
-    this.listStore.loadPosts({ ...this.$listConfig(), page: this.$listConfig.page() + 1 });
+    // this.listStore.loadPosts({
+    //   ...this.$listConfig(),
+    //   page: this.$listConfig.page() + 1,
+    // });
+    this.listStore.loadNextPage();
     window.scroll({ top: 0, left: 0, behavior: 'smooth' });
   }
 
   goToPrevPage() {
-    this.listStore.loadPosts({ ...this.$listConfig(), page: this.$listConfig.page() - 1 });
+    // this.listStore.loadPosts({
+    //   ...this.$listConfig(),
+    //   page: this.$listConfig.page() - 1,
+    // });
+    this.listStore.loadPrevPage();
     window.scroll({ top: 0, left: 0, behavior: 'smooth' });
   }
 }
